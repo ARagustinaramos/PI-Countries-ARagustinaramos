@@ -1,9 +1,9 @@
 const express = require ('express');
 const { Country } = require('../server');
 
-const info = express.Router();
+const countriesInfo = express.Router();
 
-info.get('/countries', async (req, res) =>{
+countriesInfo.get('/countries', async (req, res) =>{
     try{
         const countries = await Country.findAll();
         res.json(countries);
@@ -13,4 +13,4 @@ info.get('/countries', async (req, res) =>{
     }
 })
 
-module.exports = router;
+module.exports = countriesInfo;
