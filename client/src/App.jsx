@@ -2,10 +2,20 @@ import { useState } from 'react'
 import reactLogo from './assets/react.svg'
 import viteLogo from '/vite.svg'
 import './App.css'
+import HomePage from './components/homePage';
+import DetailPage from './components/DetailPage';
 
 function App() {
   const [count, setCount] = useState(0)
-
+  return (
+    <Router>
+      <Switch>
+        <Route path="/" exact component={HomePage} />
+        <Route path="/pais/:id" component={DetailPage} />
+      </Switch>
+    </Router>
+  );
+}
   return (
     <>
       <div>
@@ -30,6 +40,6 @@ function App() {
       </p>
     </>
   )
-}
+
 
 export default App
