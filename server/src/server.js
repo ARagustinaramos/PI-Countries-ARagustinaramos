@@ -2,7 +2,7 @@ const express = require("express");
 const router = require("./routes");
 const morgan = require("morgan");
 const cors = require("cors");
-
+const { conn } = require ('./db')
 const server = express();
 
 server.use(morgan("dev"));
@@ -11,9 +11,9 @@ server.use(cors());
 
 server.use(router);
 
-server.get("/", (req, res) => {
-  res.send(countriesInfo);
-})
+const PORT = process.env.PORT || 5000;
 
-module.exports = server;
-
+server.listen(PORT,async () => {
+ await conn.sync({force:false})
+  console.log(`Server is running on port ${PORT}`);
+});

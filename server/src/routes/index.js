@@ -1,13 +1,21 @@
-const Activity = require('../models/Activity');
+const {
+    getActivities,
+    createActivity,
+} = require('../controllers/activities');
+
+const {
+    getCountries,
+    getCountryDetails,
+    getCountriesByName,
+} = require('../controllers/countries');
 
 const router = require('express').Router();
 
-router.get('/activities', activities);
-router.post('/activities', activity);
-router.get('/countries/name', nombre);
-router.get('/:idPais', detalles);
-router.get('/countries', countriesInfo)
-
-
+// Definición de rutas
+router.get('/activities', getActivities);
+router.post('/activities', createActivity);
+router.get('/countries/name', getCountriesByName);
+router.get('/countries', getCountries);
+router.get('/:idPais', getCountryDetails);
 
 module.exports = router;

@@ -66,37 +66,52 @@ const ActivityForm =() => {
             console.error('Error al enviar solicitud:', error);
             alert('Error al crear la actividad turística. Por favor intentelo de nuevo.');
         }
+      //reinicia el formulario y errores  
+    setNombre('');
+    setDificultad('');
+    setDuracion('');
+    setTemporada('');
+    setPaisesSeleccionados([]);
+    setError('');
     };
     return (
         <div>
-            <h1>Formulario de Actividad Turística</h1>
-            <form onSubmit={handleSubmit}>
-             <label htmlFor='nombre'>Nombre:</label>
-             <input type='text' id='nombre' value={nombre} onChange={handleNombreChange} required />
-
-             <label htmlFor='dificultad'>Dificultad:</label>
-             <select id='dificultad' value={dificultad} onChange={handleDificultadChange} required>
-             <option value=''>Seleccione</option>
-             <option value='facil'>Fácil</option>
-             <option value='intermedio'>Intermedio</option>
-             <option value='dificil'>Dificil</option>
-        </select>
-        
-        <label htmlFor='duracion'>Duración (en horas):</label>
-        <input type='number' id='duracion' value={duracion} onChange={handleDuracionChange} required/>
-        
-        <label htmlFor='temporada'>Temporada:</label>
-        <input type='text' id='temporada' value={temporada} onChange={handleTemporadaChange} required/>
-
-        <label htmlFor='paises'>Paises:</label>
-        <select id='paises' multiple value={paises} onChange={handlePaisesChange} required>
-            <option value='pais1'>País 1</option>
-            <option value='pais2'>País 2</option>
-        </select>
-
-        <button type='submit'>Crear Actividad Turística</button>
-        </form>
+            <h2>Formulario de Creación de Actividad Turística</h2>
+      <form onSubmit={handleFormSubmit}>
+        <div>
+          <label>Nombre:</label>
+          <input type="text" value={nombre} onChange={handleNombreChange} />
         </div>
+        <div>
+          <label>Dificultad:</label>
+          <input type="text" value={dificultad} onChange={handleDificultadChange} />
+        </div>
+        <div>
+          <label>Duración:</label>
+          <input type="text" value={duracion} onChange={handleDuracionChange} />
+        </div>
+        <div>
+          <label>Temporada:</label>
+          <input type="text" value={temporada} onChange={handleTemporadaChange} />
+        </div>
+        <div>
+          <label>Seleccionar Países:</label>
+          <select onChange={handlePaisChange}>
+            <option value="pais1">País 1</option>
+            <option value="pais2">País 2</option>
+          </select>
+        </div>
+        <div>
+          <ul>
+            {paisesSeleccionados.map((pais) => (
+              <li key={pais}>{pais}</li>
+            ))}
+          </ul>
+        </div>
+        {error && <div style={{ color: 'red' }}>{error}</div>}
+        <button type="submit">Crear Actividad Turística</button>
+      </form>
+    </div>
     );
 };
 };

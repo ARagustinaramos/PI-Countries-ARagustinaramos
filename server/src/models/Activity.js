@@ -9,7 +9,7 @@ module.exports = (sequelize) => {
         primaryKey:true
      },
      difficulty:{
-        type: DataTypes.INTEGER,
+        type: DataTypes.STRING,
         allowNull: false,
      },
      duration: {
@@ -17,5 +17,8 @@ module.exports = (sequelize) => {
      },
      season: {
         type: DataTypes.STRING // estaciones del año
-     }
-  })}
+     },
+    
+   }
+  )}
+  

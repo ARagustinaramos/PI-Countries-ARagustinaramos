@@ -25,7 +25,7 @@ module.exports = (sequelize) => {
       type: DataTypes.STRING,
       allowNull: false,
     },
-    subregion: { 
+    subregion: {
       type: DataTypes.STRING,
     },
     area: {
@@ -33,7 +33,13 @@ module.exports = (sequelize) => {
     },
     population: {
       type: DataTypes.INTEGER,
-      allowNull:false,
-    }
+      allowNull: false,
+    },
+    region: {
+      type: DataTypes.STRING,
+    },
+    languages: {
+      type: DataTypes.JSONB, 
+    },
   });
 };
