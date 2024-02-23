@@ -4,13 +4,13 @@ const { DataTypes } = require('sequelize');
 module.exports = (sequelize) => {
   // defino el modelo
   sequelize.define('Country', {
-    id:{
+    id: {
       type: DataTypes.STRING(3),
       primaryKey: true,
       allowNull: false,
     },
     name: {
-      type: DataTypes.STRING,
+      type: DataTypes.JSONB,
       allowNull: false,
     },
     flagImage: {
@@ -22,7 +22,7 @@ module.exports = (sequelize) => {
       allowNull: false,
     },
     capital: {
-      type: DataTypes.STRING,
+      type: DataTypes.JSONB,
       allowNull: false,
     },
     subregion: {
@@ -39,7 +39,7 @@ module.exports = (sequelize) => {
       type: DataTypes.STRING,
     },
     languages: {
-      type: DataTypes.JSONB, 
+      type: DataTypes.JSONB,
     },
   });
 };

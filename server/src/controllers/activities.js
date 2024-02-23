@@ -3,7 +3,6 @@ const { Activity, Country } = require('../db');
 const getActivities = async (req, res) => {
     try{
         const activities = await Activity.findAll();  //busca las actividades
-
         res.json(activities);
     }catch (error){
         console.log(error);
@@ -35,7 +34,7 @@ const createActivity= async (req, res) => {
     res.status(201).json(activity);              //devuelve la actividade creada
     }catch(error) {
         console.log(error);
-        res.status(500).json({menssge: 'Error al crear actividad'})
+        res.status(500).json({menssage: 'Error al crear actividad'})
     }
 };
 

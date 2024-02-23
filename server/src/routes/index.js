@@ -11,6 +11,10 @@ const {
 
 const router = require('express').Router();
 
+router.get('/', (req, res) => {
+    res.send('¡Bienvenido!');
+  });
+
 // Definición de rutas
 router.get('/activities', getActivities);
 router.post('/activities', createActivity);
