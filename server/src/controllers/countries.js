@@ -1,4 +1,4 @@
-
+const { Op } = require('sequelize');
 const { Activity, Country } = require('../db');
 
 

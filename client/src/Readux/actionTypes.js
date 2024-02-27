@@ -1,0 +1,1 @@
+export const INGRESAR_HOME_PAGE = 'Ingresar_Home_Page';

@@ -1,23 +1,24 @@
 import React, { useState } from "react";
 
-const SearchBar = () => {
-    const [busqueda, setBusqueda ] = useState('');
+const SearchBar = ({ onSearch }) => {
+  const [busqueda, setBusqueda] = useState('');
 
-    const handleSearch = () =>{
-        onSearch(busqueda);
-    };
+  const handleSearch = (e) => {
+    e.preventDefault();
+    onSearch(busqueda);
+  };
 
-    return (
-        <div className="serch-bar">
-            <input
-            type="text"
-            placeholder="buscar paises..."
-            value={busqueda}
-            onChange={(e) => setBusqueda(e.target.value)}
-            />
-            <button onClick={handleSearch}>Buscar</button>
-        </div>
-    )
-}
+  return (
+    <form className="search-bar" onSubmit={handleSearch}>
+      <input
+        type="text"
+        placeholder="Buscar países..."
+        value={busqueda}
+        onChange={(e) => setBusqueda(e.target.value)}
+      />
+      <button type="submit">Buscar</button>
+    </form>
+  );
+};
 
 export default SearchBar;

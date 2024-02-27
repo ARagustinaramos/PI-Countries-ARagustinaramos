@@ -12,20 +12,20 @@ server.use(cors());
 
 server.use(router);
 
-const PORT = process.env.PORT || 5000;
+const PORT = process.env.PORT || 3001;
 
 const startServer = async () => {
   try {
-    console.log('Synchronizing with the database...');
+    console.log('Sincronizando con la base de datos...');
     await conn.sync({force:true });
-    console.log('Database synchronized successfully.');
+    console.log('Data base sincronizada.');
 
     const countriesFromAPI = await fetchCountriesFromAPI();
     await saveCountriesToDatabase(countriesFromAPI)
 
-    console.log(`Server connected on port: ${PORT}`);
+    console.log(`Server conectado en el puerto: ${PORT}`);
   } catch (error) {
-    console.error('Error starting the server:', error.message);
+    console.error('Error al conectarse con el server:', error.message);
   }
   
 

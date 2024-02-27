@@ -2,18 +2,22 @@ import React, {useState, useEffect} from 'react';
 import{useSelector, useDispatch} from 'react-redux';
 import { Link } from 'react-router-dom';
 import axios from 'axios';
-import { ingresarHomePage } from '../actions';
-import SearchBar from './searchBar';
+import { INGRESAR_HOME_PAGE } from '../Readux/actionTypes';
+import SearchBar from './SearchBar';
+import CardList from './CardList';
 
 const HomePage = () => {
     const dispatch = useDispatch();
     const enHomePage = useSelector ((state) => state.enHomePage );
 
-    useEffect (() => {
-        dispatch(ingresarHomePage());
-    }, [dispatch]);
+    useEffect(() => {
+        dispatch({
+          type: INGRESAR_HOME_PAGE,
+          payload: true,
+        });
+      }, [dispatch]);
 
-const [filtroContiene, setFiltroContinente] = useState('');
+const [filtroContinente, setFiltroContinente] = useState('');
 const [filtroActividad, setFiltroActividad] = useState('');
 const [orden, setOrden] = useState('asc');
 const [paginaActual, setPaginaActual] = useState(1);
@@ -25,19 +29,18 @@ const [paises, setPaises] = useState([]);
 
 useEffect(() => {
     axios.get(endpoint)
-    .then(response => setPaises(reponse.data))
+    .then(response => setPaises(response.data))
     .catch(error => console.error ('Error al buscar paises:', error)); 
 },[endpoint]);
 
+const filtrarPorContinente = (pais) => filtroContinente === '' || pais.continente ===  filtroContinente;
+
 const handleSearch = (terminoBusqueda) => {
-    const resultados = paises.filter((pais) =>
-      pais.nombre.toLowerCase().includes(terminoBusqueda.toLowerCase())
+    const resultados = paises.filter(({ name }) =>
+      name.toLowerCase().includes(terminoBusqueda.toLowerCase())
     );
     setResultadosBusqueda(resultados);
-  }; 
-
-const filtrarPorContinente = (pais) => filtroContinente === '' || pais.contiente ===  filtroContiente;
-
+}
 const filtrarPorActividad = (pais)=> {
     if(filtroActividad === ''){           // si no hay filtro de activiad, mostrarlos todos
         return true;
@@ -47,20 +50,32 @@ const filtrarPorActividad = (pais)=> {
     }
     return pais.actividades.some(actividad =>  actividad.tipo === filtroActividad ) // verifico si al menos una actividad coincide con el filtro
 }
-const ordenarPaises = (a, b )=> {
+const ordenarPaises = (a, b) => {
     let comparador;
-if(orden === 'asc'){
-    comparador = 1;
-}else{
-    comparador=-1;
-}
-return a.nombre.localeCompare(b.nombre)*coparador;
-};
+    if (orden === 'asc') {
+      comparador = 1;
+    } else {
+      comparador = -1;
+    }
+  
+    // Verificar si a.name es una cadena antes de llamar a toLowerCase()
+    const nombreA = typeof a.name === 'string' ? a.name.toLowerCase() : '';
+    const nombreB = typeof b.name === 'string' ? b.name.toLowerCase() : '';
+  
+    if (nombreA < nombreB) {
+      return -1 * comparador;
+    }
+    if (nombreA > nombreB) {
+      return 1 * comparador;
+    }
+    return 0;
+  };
+  
 
 const indexOfLastPais = paginaActual * paisesPorPagina;
 const indexOfFirstPais = indexOfLastPais - paisesPorPagina;
 const paisesPaginados = paises
-.filter(filtrarPorContienente)
+.filter(filtrarPorContinente)
 .filter(filtrarPorActividad)
 .sort(ordenarPaises)
 .slice(indexOfFirstPais, indexOfLastPais);
@@ -82,18 +97,8 @@ return (
         <button onClick={() => setOrden('desc')}>Ordenar descendente</button>
     </div>
 
-    <div className='card-list'>
-        {paisesPaginados.map((pais) => (
-            <Link to={`/pais/${pais.id}`} key={pais.id}>
-            <div className='card'>
-             <img src={`path/to/flags/${pais.bandera}`} alt={`${pais.nombre} Bandera`} />
-             <h2>{pais.nombre}</h2>
-             <p>Continente: {pais.continente}</p>
-             <p>Poblacion: {pais.poblacion}</p>
-            </div>
-            </Link>
-        ))}
-    </div>
+    <CardList paisesPaginados={paisesPaginados} />
+
     <div className='pagination'>
     {Array.from({ length: Math.ceil(paises.length / paisesPorPagina) }).map((_, index) => (
           <button key={index} onClick={() => setPaginaActual(index + 1)}>

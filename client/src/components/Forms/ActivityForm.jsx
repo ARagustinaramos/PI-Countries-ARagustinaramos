@@ -1,83 +1,101 @@
-import React , {useState} from 'react';
+import React, { useState, useEffect } from 'react';
 
-const ActivityForm =() => {
-    const [nombre, setNombre] = useState('');
-    const [dificultad, setDificultad] = useState ('');
-    const[duracion, setDuracion ] = useState ('');
-    const[temporada, setTemporada] = useState('');
-    const[paises, setPaises] = useState ([]);
+const ActivityForm = () => {
+  const [nombre, setNombre] = useState('');
+  const [dificultad, setDificultad] = useState('');
+  const [duracion, setDuracion] = useState('');
+  const [temporada, setTemporada] = useState('');
+  const [paises, setPaises] = useState([]);
+  const [paisesDisponibles, setPaisesDisponibles] = useState([]);
+  const [error, setError] = useState('');
 
-    const handleNombreChange = (event) => {
-        setNombre(event.target.value);
-    };
+  useEffect(() => {
+    // ... Código para obtener países disponibles ...
+  }, []);
 
-    const handleDificultadChange = (event) => {
-        setDificultad(event.target.value);
-    };
+  const handleNombreChange = (event) => {
+    setNombre(event.target.value);
+    validateForm(); // Llama a la función de validación cada vez que cambia el nombre
+  };
 
-    const handleDuracionChange = (event) => {
-        setDuracion(event.target.value);
-    };
+  const handleDificultadChange = (event) => {
+    setDificultad(event.target.value);
+    validateForm(); // Llama a la función de validación cada vez que cambia la dificultad
+  };
 
-    const handleTemporadaChange = (event) => {
-        setTemporada(event.target.value);
-    };
+  const handleDuracionChange = (event) => {
+    setDuracion(event.target.value);
+    validateForm(); // Llama a la función de validación cada vez que cambia la duración
+  };
 
-    const handlePaisesChange = (event) => {
-        const selectedOptions = Array.from(event.target.selectedOptions).map(option => option.value);
-        setPaises(selectedOptions);
-    };
+  const handleTemporadaChange = (event) => {
+    setTemporada(event.target.value);
+    validateForm(); // Llama a la función de validación cada vez que cambia la temporada
+  };
 
-    const validarFormulario = () => {
-        if(!nombre || !dificultad || !duracion || !temporada || paises.length === 0){
-            alert('Por favor, complete todos los campos.');
-            return false
-        }
-        if(isNaN(parseFloat(duracion))){
-            alert('La duracion de ser un número.');
-            return false;
-        }
-        alert ('Actividad turística creada con éxito!') //si todas las validaciones pasan, se crea la actividad
-    };
-    const handleSubmit = async (event) => {
-        event.preventDefault();    //evita que el formulario se envie por defecto
-        if(validarFormulario()){
-            try {
-                const respuesta = await fetch('http://localhost:5000/countries',{
-                    method:'POST',
-                    headers:{
-                        'Content-Type': 'application/json',
-                    },
-                    body: JSON.stringify({
-                        nombre,
-                        dificultad,
-                        duracion,
-                        temporada,
-                        paises,
-                    }),
-                });
-                if(respuesta.ok){
-                    alert('Actividad turística creada con éxito!') // la solicitud fue exitosa
-                }else{
-                    alert ('Error al crear la actividad turística.Por favor intentelo de nuevo.'); // la solicitud no fue exitosa
-                    
-                }
-            }catch (error) {
-            console.error('Error al enviar solicitud:', error);
-            alert('Error al crear la actividad turística. Por favor intentelo de nuevo.');
-        }
-      //reinicia el formulario y errores  
+  const handlePaisesChange = (event) => {
+    const selectedOptions = Array.from(event.target.selectedOptions).map((option) => option.value);
+    setPaises(selectedOptions);
+    validateForm(); // Llama a la función de validación cada vez que cambian los países seleccionados
+  };
+
+  const validateForm = () => {
+    // Ejemplo de validaciones básicas, puedes agregar más según tus requisitos
+    if (nombre.length < 3) {
+      setError('El nombre debe tener al menos 3 caracteres.');
+    } else if (duracion <= 0) {
+      setError('La duración debe ser mayor que 0.');
+    } else {
+      setError('');
+    }
+  };
+
+  const handleSubmit = async (event) => {
+    event.preventDefault();
+
+    try {
+      const respuesta = await fetch('http://localhost:5000/countries', {
+        method: 'POST',
+        headers: {
+          'Content-Type': 'application/json',
+        },
+        body: JSON.stringify({
+          nombre,
+          dificultad,
+          duracion,
+          temporada,
+          paises,
+        }),
+      });
+
+      if (respuesta.ok) {
+        alert('Actividad turística creada con éxito!');
+        // Puedes realizar más acciones aquí después de un envío exitoso si es necesario
+      } else {
+        const mensajeError = await respuesta.text();
+        console.error('Error al crear la actividad turística. Respuesta del servidor:', mensajeError);
+        alert('Error al crear la actividad turística. Por favor, inténtelo de nuevo.');
+        setError(mensajeError);
+      }
+    } catch (error) {
+      console.error('Error al enviar solicitud:', error);
+      alert('Error al crear la actividad turística. Por favor, inténtelo de nuevo.');
+      setError(error.message);
+    }
+
+    // Reinicia el formulario y errores
     setNombre('');
     setDificultad('');
     setDuracion('');
     setTemporada('');
-    setPaisesSeleccionados([]);
-    setError('');
-    };
-    return (
-        <div>
-            <h2>Formulario de Creación de Actividad Turística</h2>
-      <form onSubmit={handleFormSubmit}>
+    setPaises([]);
+  };
+
+  return (
+    <div>
+      <h2>Formulario de Creación de Actividad Turística</h2>
+      <form onSubmit={handleSubmit}>
+        {/* Campos del formulario */}
         <div>
           <label>Nombre:</label>
           <input type="text" value={nombre} onChange={handleNombreChange} />
@@ -88,7 +106,7 @@ const ActivityForm =() => {
         </div>
         <div>
           <label>Duración:</label>
-          <input type="text" value={duracion} onChange={handleDuracionChange} />
+          <input type="number" value={duracion} onChange={handleDuracionChange} />
         </div>
         <div>
           <label>Temporada:</label>
@@ -96,23 +114,20 @@ const ActivityForm =() => {
         </div>
         <div>
           <label>Seleccionar Países:</label>
-          <select onChange={handlePaisChange}>
-            <option value="pais1">País 1</option>
-            <option value="pais2">País 2</option>
+          <select multiple onChange={handlePaisesChange}>
+            {paisesDisponibles.map((pais) => (
+              <option key={pais.id} value={pais.id}>{pais.nombre}</option>
+            ))}
           </select>
         </div>
         <div>
-          <ul>
-            {paisesSeleccionados.map((pais) => (
-              <li key={pais}>{pais}</li>
-            ))}
-          </ul>
+          {/* Muestra mensajes de error */}
+          {error && <div style={{ color: 'red' }}>{error}</div>}
         </div>
-        {error && <div style={{ color: 'red' }}>{error}</div>}
         <button type="submit">Crear Actividad Turística</button>
       </form>
     </div>
-    );
+  );
 };
-};
-export default ActivityForm
+
+export default ActivityForm;

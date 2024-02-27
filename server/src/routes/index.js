@@ -19,7 +19,7 @@ router.get('/', (req, res) => {
 router.get('/activities', getActivities);
 router.post('/activities', createActivity);
 router.get('/countries/name', getCountriesByName);
+router.get('/countries/:idPais', getCountryDetails);  
 router.get('/countries', getCountries);
-router.get('/:idPais', getCountryDetails);
 
 module.exports = router;
